@@ -1,0 +1,13 @@
+[grafana]
+192.168.122.83
+
+[prometheus]
+192.168.122.84
+
+[loki]
+192.168.122.85
+
+[promtail:children]
+grafana
+prometheus
+loki

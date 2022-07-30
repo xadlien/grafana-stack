@@ -1,0 +1,29 @@
+---
+- name: download grafana
+  get_url:
+    url: "{{ grafana_url }}"
+    dest: /tmp/grafana.deb
+  tags:
+  - grafana
+
+- name: install grafana
+  apt:
+    deb: /tmp/grafana.deb
+  tags:
+  - grafana
+
+- name: template grafana config file
+  template:
+    src: grafana.ini.j2
+    dest: /etc/grafana/grafana.ini
+  tags:
+  - grafana
+
+- name: restart service
+  systemd:
+    name: grafana-server.service
+    enabled: true 
+    daemon_reload: true 
+    state: restarted
+  tags:
+  - grafana

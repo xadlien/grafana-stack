@@ -1,0 +1,6 @@
+---
+- hosts: loki
+  roles:
+    - loki
+  remote_user: root
+

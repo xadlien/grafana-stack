@@ -1,0 +1,47 @@
+---
+- name: install packages
+  apt:
+    name:
+    - unzip
+    update_cache: true
+  tags:
+  - prometheus
+
+- name: download prometheus
+  get_url:
+    url: "{{ prometheus_url }}"
+    dest: /tmp/prometheus.zip
+  tags:
+  - prometheus
+
+- name: unzip prometheus
+  unarchive:
+    src: /tmp/prometheus.zip
+    remote_src: true
+    dest: /usr/bin/
+    mode: 0755
+  tags:
+  - prometheus
+
+- name: template prometheus service file
+  template:
+    src: prometheus.service.j2
+    dest: /etc/systemd/system/prometheus.service
+  tags:
+  - prometheus
+
+- name: template prometheus config file
+  template:
+    src: prometheus.yml.j2
+    dest: /usr/bin/prometheus-2.37.0.linux-amd64/prometheus.yml
+  tags:
+  - prometheus
+
+- name: restart service
+  systemd:
+    name: prometheus.service
+    enabled: true 
+    daemon_reload: true 
+    state: restarted
+  tags:
+  - prometheus
